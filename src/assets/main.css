@@ -16,11 +16,11 @@
 
 
 .button-primary {
-  @apply bg-primary border-primary border-2 hover:bg-primary-emphasis-alt text-white font-bold
+  @apply bg-primary border-primary text-white border-2 hover:bg-primary-contrast hover:text-primary font-bold
 }
 
 .button-outlined {
-  @apply border-primary text-primary bg-white hover:bg-primary-emphasis-alt hover:text-white
+  @apply border-primary text-primary bg-white hover:bg-primary-contrast hover:text-primary
 }
 
 .input-primary {

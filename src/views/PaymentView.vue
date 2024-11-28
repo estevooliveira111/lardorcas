@@ -5,38 +5,43 @@
       Sua doação ajuda a transformar vidas. Contribua para um futuro melhor.
     </h2>
 
-    <form v-if="!qrCode && payment" @submit.prevent="gerarQRCode" class="space-y-4">
+      <div v-if="loading" class="flex justify-center items-center h-64">
+      <i class="pi pi-spin pi-spinner text-4xl"></i>
+    </div>
+
+    <form v-if="!qrCode && payment && !loading" @submit.prevent="gerarQRCode" class="space-y-4">
       <div class="form-group">
-        <label for="nome" class="block text-sm font-medium text-gray-700">Nome do Cliente</label>
+        <label for="nome" class="block text-sm font-medium text-gray-700">Nome <span class="text-red-600">*</span></label>
         <InputText
           id="nome"
           v-model="form.name"
           required
           placeholder="Nome do Cliente"
-          class="mt-1 block w-full input-base"
+          class="mt-1 block w-full hover:border-primary focus:border-primary active:border-primary"
         />
       </div>
 
       <div class="form-group">
-        <label for="email" class="block text-sm font-medium text-gray-700">E-mail</label>
+        <label for="email" class="block text-sm font-medium text-gray-700">E-mail <span class="text-red-600">*</span></label>
         <InputText
           id="email"
-          v-model="email"
+          v-model="form.email"
           type="email"
           required
           placeholder="E-mail"
-          class="mt-1 block w-full input-base"
+          class="mt-1 block w-full hover:border-primary focus:border-primary active:border-primary"
         />
       </div>
 
       <div class="form-group">
-        <label for="valor" class="block text-sm font-medium text-gray-700">CPF</label>
+        <label for="valor" class="block text-sm font-medium text-gray-700">CPF <span class="text-red-600">*</span></label>
         <InputText
           id="valor"
           v-mask="'###.###.###-##'"
+          placeholder="CPF (111.111.111-11)"
           v-model="valor"
           required
-          class="mt-1 block w-full input-base"
+          class="mt-1 block w-full hover:border-primary focus:border-primary active:border-primary"
         />
       </div>
 
@@ -66,6 +71,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -116,7 +122,8 @@ const gerarQRCode = async () => {
   axios
     .post(`${import.meta.env.VITE_EXTERNAL_API}payment`, {
       ...pixData,
-      id_ref: 'HSHda4VRjcIcJ1tCLRtb',
+      cpf: valor.value.replace(/[^\d]/g, ''),
+      id_ref: code
     })
     .then(({ data }) => {
       updateDoc(code, form.value)
@@ -132,7 +139,8 @@ const gerarQRCode = async () => {
     .catch((response) => {
       toast.add({
         severity: 'error',
-        detail: 'Error ao Gerar Pix',
+        summary: 'Error ao Gerar Pix',
+        detail: response?.response?.data?.error,
         life: 5000,
       })
     })
