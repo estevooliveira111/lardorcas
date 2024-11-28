@@ -1,0 +1,10 @@
+Flask-CORS
+firebase-admin
+firestore
+google-cloud-firestore
+Flask
+requests
+zappa
+setuptools
+email-validator
+validate-docbr
