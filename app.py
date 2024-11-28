@@ -56,12 +56,13 @@ def generatePayment():
     try:
         data = request.json
 
-        if 'nome' not in data or 'email' not in data or 'cpf' not in data:
+        if 'name' not in data or 'email' not in data or 'cpf' not in data:
             return jsonify({"error": "Dados ausentes"}), 400
 
-        nome = data['nome']
-        email = data['email']
         cpf = data['cpf']
+        name = data['name']
+        email = data['email']
+        value = data['amount']
 
         if not validar_cpf(cpf):
             return jsonify({"error": "CPF inválido"}), 400
@@ -74,10 +75,10 @@ def generatePayment():
         response = classPay.gerar_pix({
                 "cliente":{
                     "dataNascimento": "1993-12-16",
-                    "nome": nome,
+                    "nome": name,
                     "email": email,
                     "celular":"63987222161",
-                    "cpf":cpf,
+                    "cpf": cpf,
                     "clienteId":51594277
                 },
                 "descricao": data.get("id_ref"),
@@ -90,7 +91,7 @@ def generatePayment():
                 },
                 "estabelecimentoId":158811,
                 "tipoPagamentoId":5,
-                "valor": 2
+                "valor": value
             })
 
         return jsonify({"pay": response}), 200
