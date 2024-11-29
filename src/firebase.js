@@ -3,13 +3,13 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from "firebase/storage";
 
 const firebaseApp = initializeApp({
-  apiKey: "AIzaSyDQGBD9aTfl1GJsWdRRft6U6_Ta1YLjzME",
-  authDomain: "firego-82472.firebaseapp.com",
-  projectId: "firego-82472",
-  storageBucket: "firego-82472.firebasestorage.app",
-  messagingSenderId: "847498805922",
-  appId: "1:847498805922:web:0c37f075dd63c564efcdfb",
-  measurementId: "G-GX2MF0J7Q7"
+  apiKey: "AIzaSyAfcGM8dLG1MM9WaFIED27EBrzaBse5ssw",
+  authDomain: "lar-dorcas-dbaf9.firebaseapp.com",
+  projectId: "lar-dorcas-dbaf9",
+  storageBucket: "lar-dorcas-dbaf9.firebasestorage.app",
+  messagingSenderId: "881198734839",
+  appId: "1:881198734839:web:6a91b852577bb2587722f2",
+  measurementId: "G-XRBHRYN892"
 });
 
 const db = getFirestore(firebaseApp);
