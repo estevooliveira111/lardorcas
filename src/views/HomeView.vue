@@ -26,7 +26,8 @@
                 v-model="form.donationAmountType"
                 :value="payment.key"
                 :name="`ingredient${payment.key}`"
-                class="w-5 h-5 accent-primary md:accent-primary"
+                class="w-5 h-5 accent-primary text-primary hover:border-primary focus:outline-none focus:ring focus:ring-primary"
+
               />
               <label
                 :for="`ingredient${payment.key}`"
@@ -68,7 +69,7 @@
             optionLabel="name"
             optionKey="value"
             placeholder="Selecione um método"
-            class="w-full appearance-none hover:border-primary focus:border-primary active:border-primary accent-pink-300 md:accent-pink-500"
+            class="w-full appearance-none accent-primary text-primary hover:border-primary focus:outline-none focus:ring focus:ring-primary"
           />
         </div>
 
@@ -174,9 +175,3 @@ const newPayment = async () => {
   }
 }
 </script>
-
-<style scoped>
-.p-radiobutton {
-  @apply border-primary;
-}
-</style>
