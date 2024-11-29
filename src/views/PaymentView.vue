@@ -5,7 +5,7 @@
       Sua doação ajuda a transformar vidas. Contribua para um futuro melhor.
     </h2>
 
-      <div v-if="loading" class="flex justify-center items-center h-64">
+    <div v-if="loading" class="flex justify-center items-center h-64">
       <i class="pi pi-spin pi-spinner text-4xl"></i>
     </div>
 
@@ -34,12 +34,12 @@
       </div>
 
       <div class="form-group">
-        <label for="valor" class="block text-sm font-medium text-gray-700">CPF <span class="text-red-600">*</span></label>
+        <label for="document" class="block text-sm font-medium text-gray-700">CPF <span class="text-red-600">*</span></label>
         <InputText
-          id="valor"
+          id="document"
           v-mask="'###.###.###-##'"
           placeholder="CPF (111.111.111-11)"
-          v-model="valor"
+          v-model="form.document"
           required
           class="mt-1 block w-full hover:border-primary focus:border-primary active:border-primary"
         />
@@ -72,14 +72,13 @@
   </div>
 </template>
 
-
 <script setup>
-import { ref, onMounted } from 'vue'
-import { doc, getDoc, updateDoc } from 'firebase/firestore'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { doc, onSnapshot, updateDoc } from 'firebase/firestore'
 import QrcodeVue from 'qrcode.vue'
 import { InputText, Button, useToast } from 'primevue'
 import { db } from '../firebase'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 
 const payment = ref(null)
@@ -90,43 +89,26 @@ const form = ref({
   email: '',
   name: '',
   amount: '',
+  document: '',
 })
-const email = ref('')
-const valor = ref('')
 const qrCode = ref(null)
 
-const fetchPayment = async (code) => {
-  try {
-    const paymentDocRef = doc(db, 'pays', code)
-    const docSnap = await getDoc(paymentDocRef)
-
-    if (docSnap.exists()) {
-      payment.value = docSnap.data()
-    } else {
-      console.log('Pagamento não encontrado!')
-      payment.value = null
-    }
-  } catch (error) {
-    console.error('Erro ao buscar pagamento:', error)
-  }
-}
+const route = useRoute()
+const router = useRouter()
 
 const gerarQRCode = async () => {
   loading.value = true
-  const pixData = {
-    name: form.value.name,
-    amount: payment.value.donationAmount,
-    email: form.value.email,
-  }
 
   axios
     .post(`${import.meta.env.VITE_EXTERNAL_API}payment`, {
-      ...pixData,
-      cpf: valor.value.replace(/[^\d]/g, ''),
+      ...form.value,
+      amount: payment.value.donationAmount,
+      cpf: form.value.document.replace(/[^\d]/g, ''),
       id_ref: code
     })
-    .then(({ data }) => {
-      updateDoc(code, form.value)
+    .then(async ({ data }) => {
+      const paymentDocRef = doc(db, 'pays', code)
+      await updateDoc(paymentDocRef, form.value)
 
       qrCode.value = data['pix']
       toast.add({
@@ -137,9 +119,10 @@ const gerarQRCode = async () => {
       })
     })
     .catch((response) => {
+      console.log(response);
       toast.add({
         severity: 'error',
-        summary: 'Error ao Gerar Pix',
+        summary: 'Erro ao Gerar Pix',
         detail: response?.response?.data?.error,
         life: 5000,
       })
@@ -155,7 +138,7 @@ const copiarQRCode = () => {
         toast.add({
           severity: 'success',
           summary: 'Código Copiado!',
-          detail: 'Seu codigo foi copiado para area de trasnferencia',
+          detail: 'Seu código foi copiado para área de transferência',
           life: 3000,
         })
       })
@@ -169,8 +152,29 @@ const copiarQRCode = () => {
   }
 }
 
-const code = useRoute().params.code
+const code = route.params.code
+
+const fetchPaymentRealTime = () => {
+  const paymentDocRef = doc(db, 'pays', code)
+  const unsubscribe = onSnapshot(paymentDocRef, (docSnap) => {
+    if (docSnap.exists()) {
+      payment.value = docSnap.data()
+
+      if (payment.value.status === 'Pago') {
+        router.push({ name: 'success' })
+      }
+    } else {
+      console.log('Pagamento não encontrado!')
+      payment.value = null
+    }
+  })
+
+  onUnmounted(() => {
+    unsubscribe()
+  })
+}
+
 onMounted(async () => {
-  await fetchPayment(code)
+  fetchPaymentRealTime()
 })
 </script>
