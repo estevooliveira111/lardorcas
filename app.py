@@ -20,6 +20,7 @@ CORS(
                 "https://firego-82472.web.app",
                 "http://localhost:5173",
                 "http://localhost:5174",
+                "http://localhost:4000",
             ]
         }
     },
@@ -56,7 +57,7 @@ def generatePayment():
     try:
         data = request.json
 
-        if 'name' not in data or 'email' not in data or 'cpf' not in data:
+        if 'name' not in data or 'email' not in data or 'cpf' not in data or 'amount' not in data or 'id_ref' not in data:
             return jsonify({"error": "Dados ausentes"}), 400
 
         cpf = data['cpf']
@@ -97,6 +98,3 @@ def generatePayment():
         return jsonify({"pay": response}), 200
     except Exception as e:
         return jsonify({"error": str(e), "message": "Houve um erro para gerar pagamento, tente novamente mais tarde"}), 500
-
-if __name__ == '__main__':
-    app.run(debug=True)
