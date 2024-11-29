@@ -16,13 +16,8 @@ import 'flowbite';
 import 'primeicons/primeicons.css'
 import { firebaseApp } from './firebase'
 
-
 import VueBarcode from '@chenfengyuan/vue-barcode';
-
-
 import { ConfirmationService } from 'primevue';
-
-
 import ToastService from 'primevue/toastservice';
 
 import 'moment/locale/pt-br';
