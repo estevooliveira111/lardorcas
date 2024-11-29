@@ -34,7 +34,7 @@ class PaymentSystems:
     def gerar_pagamento_cartao(self, payment_data):
         ...
 
-    def gerar_pix(self, payment_data):
+    def generate_pix(self, payment_data):
         """
         Processa o pagamento utilizando a API.
         """
