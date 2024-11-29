@@ -137,7 +137,7 @@ const processarPagamento = async () => {
       detail: `Pagamento de R$ ${payment.value.donationAmount / 100} confirmado!`,
       life: 5000,
     })
-    router.push({ name: 'success' })
+    return router.push({ name: 'success' })
   } catch (error) {
     console.log(error);
     toast.add({
