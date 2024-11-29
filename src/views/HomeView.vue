@@ -160,7 +160,7 @@ const newPayment = async () => {
     const ipData = await ipResponse.json()
     const userIP = ipData.ip
 
-    const paysCollection = collection(db, 'pays')
+    const paysCollection = collection(db, 'payments')
     const docRef = await addDoc(paysCollection, {
       ...form.value,
       donationAmount: form.value.donationAmountType === 'personalizado' ? form.value.donationAmount.replace('R$ ', '').replace('.', '').replace(',', '.') : form.value.donationAmountType,

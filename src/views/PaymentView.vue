@@ -107,7 +107,7 @@ const gerarQRCode = async () => {
       id_ref: code
     })
     .then(async ({ data }) => {
-      const paymentDocRef = doc(db, 'pays', code)
+      const paymentDocRef = doc(db, 'payments', code)
       await updateDoc(paymentDocRef, form.value)
 
       qrCode.value = data['pix']
@@ -155,7 +155,7 @@ const copiarQRCode = () => {
 const code = route.params.code
 
 const fetchPaymentRealTime = () => {
-  const paymentDocRef = doc(db, 'pays', code)
+  const paymentDocRef = doc(db, 'payments', code)
   const unsubscribe = onSnapshot(paymentDocRef, (docSnap) => {
     if (docSnap.exists()) {
       payment.value = docSnap.data()
