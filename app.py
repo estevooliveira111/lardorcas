@@ -3,6 +3,8 @@ from flask import Flask, request, jsonify
 from email_validator import validate_email, EmailNotValidError
 from flask_cors import CORS
 from validate_docbr import CPF
+import uuid
+import random
 
 from services.payment_systems import PaymentSystems
 
@@ -26,6 +28,25 @@ CORS(
     },
 )
 
+def gerar_codigo_pix(amount):
+    identificador = str(uuid.uuid4()).replace('-', '')[:20]
+    valor_formatado = f"{amount:.2f}".replace('.', '')
+    codigo_pix = f"00020126330014BR.GOV.BCB.PIX01145204000053039865404{valor_formatado}5802BR5913Nome do Estabelecimento6009SAO PAULO62070503{identificador}"
+    return codigo_pix
+
+def processar_pagamento_cartao(numero_cartao, validade, cvv, valor):
+    if random.choice([True, False]):
+        transacao_id = str(uuid.uuid4())
+        return {
+            "status": "Aprovado",
+            "transacao_id": transacao_id,
+            "valor": valor
+        }
+    else:
+        return {
+            "status": "Recusado",
+            "motivo": "Transação não autorizada"
+        }
 
 
 @app.after_request
@@ -98,3 +119,56 @@ def generatePayment():
         return jsonify({"pix": response["pedido"]["qrCodePix"]})
     except Exception as e:
         return jsonify({"error": str(e), "message": "Houve um erro para gerar pagamento, tente novamente mais tarde"}), 500
+
+@app.route('/demo-criar-pagamento', methods=['POST'])
+def demo_criar_pagamento():
+    data = request.get_json()
+
+    if 'name' not in data or 'email' not in data or 'cpf' not in data or 'amount' not in data or 'id_ref' not in data:
+            return jsonify({"error": "Dados ausentes"}), 400
+
+    cpf = data['cpf']
+    name = data['name']
+    email = data['email']
+    value = data['amount']
+
+    if not validar_cpf(cpf):
+        return jsonify({"error": "CPF inválido"}), 400
+
+    if not validar_email(email):
+        return jsonify({"error": "E-mail inválido"}), 400
+
+    codigo_pix = gerar_codigo_pix(value)
+
+    return jsonify({
+        "mensagem": "Pagamento Pix criado com sucesso.",
+        "pix": codigo_pix,
+        "amount": value
+    }), 201
+
+
+@app.route('/demo-criar-pagamento-cartao', methods=['POST'])
+def criar_pagamento_cartao():
+    dados = request.get_json()
+
+    numero_cartao = dados.get('numero_cartao')
+    validade = dados.get('validade')
+    cvv = dados.get('cvv')
+    valor = dados.get('amount')
+
+    if not numero_cartao or not validade or not cvv or not valor:
+        return jsonify({"erro": "Todos os dados do cartão e o valor são obrigatórios"}), 400
+
+    resultado = processar_pagamento_cartao(numero_cartao, validade, cvv, valor)
+
+    if resultado["status"] == "Aprovado":
+        return jsonify({
+            "mensagem": "Pagamento com cartão aprovado.",
+            "transacao_id": resultado["transacao_id"],
+            "valor": resultado["valor"]
+        }), 201
+    else:
+        return jsonify({
+            "mensagem": "Pagamento recusado.",
+            "motivo": resultado["motivo"]
+        }), 402
