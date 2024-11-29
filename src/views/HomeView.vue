@@ -167,7 +167,14 @@ const newPayment = async () => {
       browserInfo: navigator.userAgent,
       userIP: userIP,
     })
-    router.push({ name: 'payment', params: { code: docRef.id } })
+
+    console.log(form.value.paymentMethod)
+
+    if (form.value.paymentMethod?.value === 'credit-card') {
+      return router.push({ name: 'payment_card', params: { code: docRef.id } })
+    }else{
+      return router.push({ name: 'payment_pix', params: { code: docRef.id } })
+    }
   } catch (error) {
     console.error(error)
   } finally {
