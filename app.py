@@ -16,7 +16,7 @@ CORS(
     resources={
         r"/*": {
             "origins": [
-                "https://app-firego.web.app",
+                "https://lardorcas.web.app",
                 "https://firego-82472.web.app",
                 "http://localhost:5173",
                 "http://localhost:5174",
