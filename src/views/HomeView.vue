@@ -44,6 +44,7 @@
             <InputText
               class="w-full hover:border-primary focus:border-primary"
               v-money="money"
+              v-model="form.donationAmount"
               name="amount"
               id="amount"
               placeholder="0.00"
@@ -108,7 +109,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { InputText, Select, Button, RadioButton } from 'primevue'
+import { InputText, Select, Button } from 'primevue'
 
 import { db } from '../firebase'
 import { useRouter } from 'vue-router'
@@ -161,6 +162,7 @@ const newPayment = async () => {
     const paysCollection = collection(db, 'pays')
     const docRef = await addDoc(paysCollection, {
       ...form.value,
+      donationAmount: form.value.donationAmountType === 'personalizado' ? form.value.donationAmount.replace('R$ ', '').replace('.', '').replace(',', '.') : form.value.donationAmountType,
       browserInfo: navigator.userAgent,
       userIP: userIP,
     })
