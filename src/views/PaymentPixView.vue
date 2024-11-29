@@ -102,8 +102,8 @@ const gerarQRCode = async () => {
   axios
     .post(`${import.meta.env.VITE_EXTERNAL_API}payment`, {
       ...form.value,
-      amount: payment.value.donationAmount,
       cpf: form.value.document.replace(/[^\d]/g, ''),
+      amount: payment.value.donationAmount,
       id_ref: code
     })
     .then(async ({ data }) => {
@@ -153,7 +153,6 @@ const copiarQRCode = () => {
 }
 
 const code = route.params.code
-
 const fetchPaymentRealTime = () => {
   const paymentDocRef = doc(db, 'payments', code)
   const unsubscribe = onSnapshot(paymentDocRef, (docSnap) => {

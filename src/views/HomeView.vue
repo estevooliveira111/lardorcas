@@ -27,7 +27,6 @@
                 :value="payment.key"
                 :name="`ingredient${payment.key}`"
                 class="w-5 h-5 accent-primary text-primary hover:border-primary focus:outline-none focus:ring focus:ring-primary"
-
               />
               <label
                 :for="`ingredient${payment.key}`"
@@ -68,29 +67,8 @@
             required
             optionLabel="name"
             optionKey="value"
+            class="custom-select w-full focus:border-primary w-full active:border-primary hover:border-primary !border-primary"
             placeholder="Selecione um método"
-            class="w-full appearance-none accent-primary text-primary hover:border-primary focus:outline-none focus:ring focus:ring-primary"
-          />
-        </div>
-
-        <div v-if="form.paymentMethod?.value === 'credit-card'">
-          <label for="paymentMethod" class="block text-sm font-medium text-gray-700">
-            Frequência
-          </label>
-          <Select
-            id="paymentMethod"
-            name="paymentMethod"
-            v-model="form.Frequency"
-            :options="[
-              {value: 'one' ,name: '1 Vez'},
-              {value: 'weekly' ,name: 'Semanal'},
-              {value: 'monthly' ,name: 'Mensal'},
-            ]"
-            required
-            optionLabel="name"
-            optionKey="value"
-            placeholder="Selecione um método"
-            class="w-full hover:border-primary focus:border-primary active:border-primary accent-pink-300 md:accent-pink-500"
           />
         </div>
 
@@ -110,20 +88,19 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { InputText, Select, Button } from 'primevue'
-
-import { db } from '../firebase'
+import { InputText, Select, Button, useToast } from 'primevue'
 import { useRouter } from 'vue-router'
 import { addDoc, collection } from 'firebase/firestore'
+import { db } from '../firebase'
 import { currencyBR } from '../utils/FormatMonetaryValue'
 
+const toast = useToast()
 const router = useRouter()
 
 const payments = [
   { value: currencyBR('20'), key: '20' },
   { value: currencyBR('50'), key: '50' },
   { value: currencyBR('100'), key: '100' },
-  { value: currencyBR('220'), key: '220' },
   { value: 'Outro', key: 'personalizado' },
 ]
 
@@ -153,7 +130,37 @@ const continueButtonText = computed(() => {
   return `Continuar com ${form.value.paymentMethod === 'credit-card' ? 'Cartão de Crédito' : 'PIX'}`
 })
 
+const validateForm = () => {
+  const donationAmount = form.value.donationAmountType === 'personalizado'
+    ? parseFloat(form.value.donationAmount.replace('R$ ', '').replace('.', '').replace(',', '.'))
+    : parseFloat(form.value.donationAmountType)
+
+  if (donationAmount < 2) {
+    toast.add({
+      severity: 'info',
+      summary: 'Atenção',
+      detail: `O valor mínimo para doação é R$ 2,00`,
+      life: 5000,
+    })
+    return false
+  }
+
+  if (!form.value.donationAmountType || !form.value.paymentMethod || (form.value.donationAmountType === 'personalizado' && !form.value.donationAmount)) {
+    toast.add({
+      severity: 'info',
+      summary: 'Atenção',
+      detail: `Por favor, preencha todos os campos obrigatórios.`,
+      life: 5000,
+    })
+    return false
+  }
+
+  return true
+}
+
 const newPayment = async () => {
+  if (!validateForm()) return
+
   loading.value = true
   try {
     const ipResponse = await fetch('https://api.ipify.org?format=json')
@@ -168,11 +175,10 @@ const newPayment = async () => {
       userIP: userIP,
     })
 
-    console.log(form.value.paymentMethod)
-
+    console.log(form.value.paymentMethod);
     if (form.value.paymentMethod?.value === 'credit-card') {
       return router.push({ name: 'payment_card', params: { code: docRef.id } })
-    }else{
+    } else {
       return router.push({ name: 'payment_pix', params: { code: docRef.id } })
     }
   } catch (error) {
