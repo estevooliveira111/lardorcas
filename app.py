@@ -95,6 +95,6 @@ def generatePayment():
                 "valor": value
             })
 
-        return jsonify({"pay": response}), 200
+        return jsonify({"pix": response["pedido"]["qrCodePix"]})
     except Exception as e:
         return jsonify({"error": str(e), "message": "Houve um erro para gerar pagamento, tente novamente mais tarde"}), 500
