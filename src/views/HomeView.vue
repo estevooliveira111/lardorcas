@@ -20,10 +20,11 @@
             <template #content>
               <p class="text-lg font-bold">{{ plan.label }}</p>
               <p class="text-2xl my-4"><span class="font-black">{{ plan.value }}</span>/mês</p>
-              <Button 
-                label="Contribuir" 
+              <Button
+                label="Contribuir"
                 class="w-full border-[#0076AF] bg-gradient-to-r from-[#0076AF] to-teal-400 text-white font-bold py-2 px-4 rounded hover:from-[#0076AF] hover:to-[#00D0DE]"
-                icon="pi pi-arrow-circle-right" 
+                icon="pi pi-arrow-circle-right"
+                @click="$router.push({ name: 'payment', query: { amount: plan.value } })"
               />
             </template>
           </Card>
