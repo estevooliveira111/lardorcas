@@ -1,4 +1,3 @@
-
 name: CI/CD
 
 on:
@@ -30,6 +29,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install zappa  # Corrigido: Instalar Zappa explicitamente
+
+    - name: Create Firebase Service Account JSON from Secret
+      run: |
+        echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_FILE }}" > firebase_service_account.json
+      env:
+        FIREBASE_SERVICE_ACCOUNT_FILE: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FILE }}
 
     - name: Deploy to AWS with Zappa
       env:
