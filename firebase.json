@@ -1,7 +1,7 @@
 {
   "hosting": {
     "public": "dist",
-    "site": "lardorcas",
+    "site": "aponte-bh",
     "ignore": [
       "firebase.json",
       "**/.*",
