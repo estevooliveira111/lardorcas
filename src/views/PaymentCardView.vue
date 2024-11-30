@@ -38,13 +38,13 @@
       </div>
 
       <div class="form-group">
-        <label for="numero_cartao" class="block text-sm font-medium text-gray-700"
+        <label for="card_number" class="block text-sm font-medium text-gray-700"
           >Número do Cartão <span class="text-red-600">*</span></label
         >
         <InputText
-          id="numero_cartao"
+          id="card_number"
           v-mask="'#### #### #### ####'"
-          v-model="form.numero_cartao"
+          v-model="form.card_number"
           required
           placeholder="Número do Cartão"
           class="mt-1 block w-full hover:border-primary focus:border-primary active:border-primary"
@@ -54,13 +54,13 @@
       <div class="grid grid-cols-2 gap-4">
 
         <div class="form-group">
-          <label for="validade" class="block text-sm font-medium text-gray-700"
+          <label for="expiration_date" class="block text-sm font-medium text-gray-700"
             >Data de Expiração <span class="text-red-600">*</span></label
           >
           <InputText
-            id="validade"
+            id="expiration_date"
             v-mask="'##/##'"
-            v-model="form.validade"
+            v-model="form.expiration_date"
             required
             placeholder="MM/AA"
             class="mt-1 block w-full hover:border-primary focus:border-primary active:border-primary"
@@ -113,8 +113,8 @@ const loading = ref(false)
 const form = ref({
   name: '',
   email: '',
-  numero_cartao: '',
-  validade: '',
+  card_number: '',
+  expiration_date: '',
   cvv: '',
 })
 const payment = ref(null)
@@ -124,9 +124,9 @@ const processarPagamento = async () => {
   loading.value = true
 
   try {
-    const { data } = await axios.post(`${import.meta.env.VITE_EXTERNAL_API}demo-criar-pagamento-cartao`, {
+    const { data } = await axios.post(`${import.meta.env.VITE_EXTERNAL_API}${import.meta.env.VITE_APP_API}-payment-card`, {
       ...form.value,
-      numero_cartao: form.value.numero_cartao.replace(/\s/g, ''),
+      card_number: form.value.card_number.replace(/\s/g, ''),
       amount: payment.value.donationAmount,
       id_ref: code
     })

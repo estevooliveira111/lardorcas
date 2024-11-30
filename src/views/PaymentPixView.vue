@@ -80,6 +80,11 @@ import { InputText, Button, useToast } from 'primevue'
 import { db } from '../firebase'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
+const qrCode = ref(null)
+
+const route = useRoute()
+const router = useRouter()
+const code = route.params.code
 
 const payment = ref(null)
 
@@ -91,16 +96,12 @@ const form = ref({
   amount: '',
   document: '',
 })
-const qrCode = ref(null)
-
-const route = useRoute()
-const router = useRouter()
 
 const gerarQRCode = async () => {
   loading.value = true
 
   axios
-    .post(`${import.meta.env.VITE_EXTERNAL_API}payment`, {
+    .post(`${import.meta.env.VITE_EXTERNAL_API}${import.meta.env.VITE_APP_API}-payment-pix`, {
       ...form.value,
       cpf: form.value.document.replace(/[^\d]/g, ''),
       amount: payment.value.donationAmount,
@@ -152,7 +153,6 @@ const copiarQRCode = () => {
   }
 }
 
-const code = route.params.code
 const fetchPaymentRealTime = () => {
   const paymentDocRef = doc(db, 'payments', code)
   const unsubscribe = onSnapshot(paymentDocRef, (docSnap) => {
