@@ -18,7 +18,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
           <Card v-for="(plan, key) in plans" :key="key" class="border-[#0076AF] bg-white border-2 rounded-xl p-5 shadow-lg text-center">
             <template #content>
-              <p class="text-lg font-bold">{{ plan.label }}</p>
+              <!-- <p class="text-lg font-bold">{{ plan.label }}</p> -->
               <p class="text-2xl my-4"><span class="font-black">{{ plan.value }}</span>/mês</p>
               <a
                 :href="plan.link"
