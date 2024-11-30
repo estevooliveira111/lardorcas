@@ -1,190 +1,87 @@
 <template>
-  <div class="md:flex">
-    <div class="p-8 w-full">
-      <div class="uppercase tracking-wide text-sm text-primary font-semibold">Faça a Diferença</div>
-      <h1 class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-        Doe Agora
-      </h1>
-      <p class="mt-4 max-w-2xl text-xl text-gray-500">
-        Sua doação ajuda a transformar vidas. Cada centavo conta para nossa causa.
-      </p>
+  <div class="bg-white text-gray-900 font-sans">
 
-      <form @submit.prevent="newPayment" class="mt-8 space-y-6">
-        <div>
-          <label for="amount" class="block text-sm font-medium text-gray-700"
-            >Valor da Doação <span class="text-red-600">*</span></label
-          >
-          <div class="flex flex-wrap gap-4">
-            <div
-              v-for="(payment, key) in payments"
-              :key="key"
-               :for="`ingredient${payment.key}`"
-              class="flex items-center ps-4 px-2 border border-primary rounded"
-            >
-              <input type="radio"
-                :id="`ingredient${payment.key}`"
-                v-model="form.donationAmountType"
-                :value="payment.key"
-                :name="`ingredient${payment.key}`"
-                class="w-5 h-5 accent-primary text-primary hover:border-primary focus:outline-none focus:ring focus:ring-primary"
+    <section class="mb-12 bg-white flex justify-center items-center flex-wrap space-y-4 sm:space-y-0 sm:space-x-4">
+      <img src="../assets/logo2.png" class="h-36 w-auto"/>
+      <img src="../assets/logo1.png" class="h-24 w-24"/>
+    </section>
+
+    <section class="mb-28 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <blockquote class="text-lg sm:text-xl italic mb-3">
+          "Ordene-lhes que pratiquem o bem, sejam ricos em boas obras, generosos e prontos a repartir." - 1 Tm 6.18
+        </blockquote>
+        <p class="text-xl sm:text-2xl mb-8">
+          Seja a ponte que leva esperança a quem mais precisa. Sua solidariedade ajuda a transformar histórias.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+          <Card v-for="(plan, key) in plans" :key="key" class="border-[#0076AF] bg-white border-2 rounded-xl p-5 shadow-lg text-center">
+            <template #content>
+              <p class="text-lg font-bold">{{ plan.label }}</p>
+              <p class="text-2xl my-4"><span class="font-black">{{ plan.value }}</span>/mês</p>
+              <Button 
+                label="Contribuir" 
+                class="w-full border-[#0076AF] bg-gradient-to-r from-[#0076AF] to-teal-400 text-white font-bold py-2 px-4 rounded hover:from-[#0076AF] hover:to-[#00D0DE]"
+                icon="pi pi-arrow-circle-right" 
               />
-              <label
-                :for="`ingredient${payment.key}`"
-                class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                {{ payment.value }}
-              </label>
+            </template>
+          </Card>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-teal-500 text-white py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-44 text-center lg:text-left">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-20 justify-items-center items-center">
+
+          <div class="grid grid-cols-2 gap-4 text-center lg:text-left">
+            <div>
+              <h3 class="text-3xl sm:text-4xl font-black">24</h3>
+              <p class="text-lg">Projetos ativos</p>
+            </div>
+            <div>
+              <h3 class="text-3xl sm:text-4xl font-black">+440</h3>
+              <p class="text-lg">Crianças & adolescentes</p>
+            </div>
+            <div>
+              <h3 class="text-3xl sm:text-4xl font-black">+340</h3>
+              <p class="text-lg">Famílias assistidas</p>
+            </div>
+            <div>
+              <h3 class="text-3xl sm:text-4xl font-black">+300</h3>
+              <p class="text-lg">Cestas básicas doadas</p>
             </div>
           </div>
-        </div>
 
-        <div v-if="form.donationAmountType == 'personalizado'">
-          <label for="amount" class="block text-sm font-medium text-gray-700">Outro Valor <span class="text-red-600">*</span></label>
-          <div class="mt-1 relative rounded-md shadow-sm">
-            <InputText
-              class="w-full hover:border-primary focus:border-primary"
-              v-money="money"
-              v-model="form.donationAmount"
-              name="amount"
-              id="amount"
-              placeholder="0.00"
-              min="1"
-              step="0.01"
-              required
-            />
+          <div class="flex justify-center lg:justify-start">
+            <button class="mt-8 px-12 py-6 font-bold text-base bg-white text-teal-500 rounded-lg shadow-lg hover:bg-gray-100 hover:text-teal-600 hover:scale-105 transition duration-300 transform">
+    Conheça nossos projetos
+  </button>
           </div>
-        </div>
 
-        <div>
-          <label for="paymentMethod" class="block text-sm font-medium text-gray-700">
-            Método de Pagamento <span class="text-red-600">*</span>
-          </label>
-          <Select
-            id="paymentMethod"
-            name="paymentMethod"
-            v-model="form.paymentMethod"
-            :options="paymentMethods"
-            required
-            optionLabel="name"
-            optionKey="value"
-            class="custom-select w-full focus:border-primary w-full active:border-primary hover:border-primary !border-primary"
-            placeholder="Selecione um método"
-          />
-        </div>
+          <div class="flex flex-col items-start">
+            <a href="https://wa.me/1234567890" target="_blank" class="flex items-center space-x-1 hover:bg-white font-bold rounded-md hover:text-primary p-1">
+              <i class="pi pi-whatsapp mx-5" style="font-size: 2rem"></i>
+              <label class="text-lg underline hover:no-underline">Dúvidas? <br> Entre em contato!</label>
+            </a>
+          </div>
 
-        <div>
-          <Button
-            type="submit"
-            :loading="loading"
-            :label="continueButtonText"
-            icon="pi pi-heart"
-            class="w-full button-primary"
-          />
         </div>
-      </form>
-    </div>
+      </div>
+    </section>
+
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { InputText, Select, Button, useToast } from 'primevue'
-import { useRouter } from 'vue-router'
-import { addDoc, collection } from 'firebase/firestore'
-import { db } from '../firebase'
-import { currencyBR } from '../utils/FormatMonetaryValue'
+import { Button, Card } from 'primevue';
 
-const toast = useToast()
-const router = useRouter()
-
-const payments = [
-  { value: currencyBR('20'), key: '20' },
-  { value: currencyBR('50'), key: '50' },
-  { value: currencyBR('100'), key: '100' },
-  { value: 'Outro', key: 'personalizado' },
-]
-
-const paymentMethods = [
-  { value: 'credit-card', name: 'Cartão de Crédito' },
-  { value: 'pix', name: 'PIX' },
-]
-
-const money = {
-  decimal: ',',
-  thousands: '.',
-  prefix: 'R$ ',
-  precision: 2,
-  masked: false,
-}
-
-const form = ref({
-  donationAmount: 0,
-  paymentMethod: '',
-  donationAmountType: '',
-})
-
-const loading = ref(false)
-
-const continueButtonText = computed(() => {
-  if (!form.value.paymentMethod) return 'Doar Agora'
-  return `Continuar com ${form.value.paymentMethod === 'credit-card' ? 'Cartão de Crédito' : 'PIX'}`
-})
-
-const validateForm = () => {
-  const donationAmount = form.value.donationAmountType === 'personalizado'
-    ? parseFloat(form.value.donationAmount.replace('R$ ', '').replace('.', '').replace(',', '.'))
-    : parseFloat(form.value.donationAmountType)
-
-  if (donationAmount < 2) {
-    toast.add({
-      severity: 'info',
-      summary: 'Atenção',
-      detail: `O valor mínimo para doação é R$ 2,00`,
-      life: 5000,
-    })
-    return false
-  }
-
-  if (!form.value.donationAmountType || !form.value.paymentMethod || (form.value.donationAmountType === 'personalizado' && !form.value.donationAmount)) {
-    toast.add({
-      severity: 'info',
-      summary: 'Atenção',
-      detail: `Por favor, preencha todos os campos obrigatórios.`,
-      life: 5000,
-    })
-    return false
-  }
-
-  return true
-}
-
-const newPayment = async () => {
-  if (!validateForm()) return
-
-  loading.value = true
-  try {
-    const ipResponse = await fetch('https://api.ipify.org?format=json')
-    const ipData = await ipResponse.json()
-    const userIP = ipData.ip
-
-    const paysCollection = collection(db, 'payments')
-    const docRef = await addDoc(paysCollection, {
-      ...form.value,
-      donationAmount: form.value.donationAmountType === 'personalizado' ? form.value.donationAmount.replace('R$ ', '').replace('.', '').replace(',', '.') : form.value.donationAmountType,
-      browserInfo: navigator.userAgent,
-      userIP: userIP,
-    })
-
-    console.log(form.value.paymentMethod);
-    if (form.value.paymentMethod?.value === 'credit-card') {
-      return router.push({ name: 'payment_card', params: { code: docRef.id } })
-    } else {
-      return router.push({ name: 'payment_pix', params: { code: docRef.id } })
-    }
-  } catch (error) {
-    console.error(error)
-  } finally {
-    loading.value = false
-  }
-}
+const plans = [
+  {label: 'Transformar', value: 50},
+  {label: 'Impulso Inicial', value: 100},
+  {label: 'Líder de Mudança', value: 250},
+  {label: 'Arquiteto da Revolução', value: 500},
+  {label: 'Legado de Impacto', value: 1000}
+];
 </script>
