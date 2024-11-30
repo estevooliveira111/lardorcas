@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from services.demo_pay import DemoPay
+from services.firebase import get_payment, update_payment
 from services.payment_systems import PaymentSystems
 from services.validators import validar_cpf, validar_email
 from datetime import datetime
@@ -32,16 +33,19 @@ def generate_payment_pix_demo():
         if not all(field in data for field in required_fields):
             return jsonify({"error": "Dados ausentes"}), 400
 
-        cpf, name, email, amount = data['cpf'], data['name'], data['email'], data['amount']
+        cpf, name, email, amount, id_ref = data['cpf'], data['name'], data['email'], data['amount'], data['id_ref']
 
         if not validar_cpf(cpf) or not validar_email(email):
             return jsonify({"error": "CPF inválido ou E-mail inválido"}), 400
+        
+        data = get_payment(id_ref)
 
         payment__ = DemoPay()
         response = payment__.generate_pix({
             "amount": amount
         })
 
+        update_payment(id_ref, response)
         return jsonify({"pix": response["code"]})
     except Exception as e:
         return jsonify({"error": str(e), "message": "Erro ao gerar pagamento"}), 500
@@ -59,7 +63,9 @@ def generate_payment_boleto_demo():
         if not all(field in data for field in required_fields):
             return jsonify({"error": "Dados ausentes"}), 400
 
-        card_number, name, expiration_date, amount, cvv = data['card_number'], data['name'], data['expiration_date'], data['amount'], data['cvv']
+        card_number, name, expiration_date, amount, cvv, id_ref = data['card_number'], data['name'], data['expiration_date'], data['amount'], data['cvv'], data['id_ref']
+
+        data = get_payment(id_ref)
 
         payment__ = DemoPay()
         response = payment__.process_card_payment(
@@ -69,6 +75,7 @@ def generate_payment_boleto_demo():
             amount
         )
 
+        update_payment(id_ref, response)
         return jsonify({"card": response})
     except Exception as e:
         return jsonify({"error": str(e), "message": "Erro ao gerar pagamento"}), 500
