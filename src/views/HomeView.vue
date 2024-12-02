@@ -65,7 +65,7 @@
           </div>
 
           <div class="flex flex-col items-start">
-            <a href="https://wa.me/1234567890" target="_blank" class="flex items-center space-x-1 hover:bg-white font-bold rounded-md hover:text-primary p-1">
+            <a href="https://wa.me/+5531988957154" target="_blank" class="flex items-center space-x-1 hover:bg-white font-bold rounded-md hover:text-primary p-1">
               <i class="pi pi-whatsapp mx-5" style="font-size: 2rem"></i>
               <label class="text-lg underline hover:no-underline">Dúvidas? <br> Entre em contato!</label>
             </a>
