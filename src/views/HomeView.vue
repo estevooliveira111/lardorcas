@@ -57,9 +57,11 @@
           </div>
 
           <div class="flex justify-center lg:justify-start">
-            <button class="mt-8 px-12 py-6 font-bold text-base bg-white text-teal-500 rounded-lg shadow-lg hover:bg-gray-100 hover:text-teal-600 hover:scale-105 transition duration-300 transform">
+            <a
+                href="https://drive.google.com/file/d/1xVDMiPEtwZRyQb5VAj5cZ0k9nf2KeHf5/view?usp=drive_link"
+                target="_blank" class="mt-8 px-12 py-6 font-bold text-base bg-white text-teal-500 rounded-lg shadow-lg hover:bg-gray-100 hover:text-teal-600 hover:scale-105 transition duration-300 transform">
               Conheça nossos projetos
-            </button>
+            </a>
           </div>
 
           <div class="flex flex-col items-start">
